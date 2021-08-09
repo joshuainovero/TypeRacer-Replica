@@ -29,6 +29,7 @@
     <ClInclude Include="typeracer.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.gitignore" />
     <None Include="..\README.md" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
