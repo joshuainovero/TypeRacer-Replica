@@ -20,7 +20,7 @@ TypeRacer::TypeRacer() {
     wpmTxt.setFont(fontBold);
     wpmTxt.setFillColor(sf::Color(99, 142, 142));
     wpmTxt.setCharacterSize(20);
-    wpmTxt.setPosition(sf::Vector2f(window->getSize().x-120, 0.0f));
+    wpmTxt.setPosition(sf::Vector2f(window->getSize().x-128, 16.0f));
     wpmTxt.setString("WPM:");
 
     countdownTxtMsg.setFont(font);
@@ -101,6 +101,14 @@ TypeRacer::TypeRacer() {
     author.setFont(font);
     author.setCharacterSize(18);
     author.setFillColor(sf::Color(148, 184, 210));
+
+    menuBtnTexture.loadFromFile("Resources/img/MainMenuBtn.png");
+    menuBtnSprite.setTexture(menuBtnTexture);
+    menuBtnSprite.setPosition(sf::Vector2f(10.0f, 5.0f));
+    menuBtnRanges[0] = menuBtnSprite.getPosition().x;
+    menuBtnRanges[1] = menuBtnRanges[0] + menuBtnTexture.getSize().x;
+    menuBtnRanges[2] = menuBtnSprite.getPosition().y;
+    menuBtnRanges[3] = menuBtnRanges[2] + menuBtnTexture.getSize().y;
 
 }
 
@@ -226,7 +234,27 @@ void TypeRacer::inRace() {
     window->draw(inputBar);
     window->draw(inputTxt);
     window->draw(wpmTxt);
+    window->draw(menuBtnSprite);
     displayQuote();
+
+    if (menuBtnInRange()) {
+        if (!onHoverMenuBtn) {
+            cursor.loadFromSystem(sf::Cursor::Hand);
+            window->setMouseCursor(cursor);
+            onHoverMenuBtn = true;
+        }
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            reset();
+            states = 0;
+        }
+    }
+    else {
+        if (onHoverMenuBtn) {
+            cursor.loadFromSystem(sf::Cursor::Arrow);
+            window->setMouseCursor(cursor);
+            onHoverMenuBtn = false;
+        }
+    }
 
     if (clockCountdown == nullptr) {
         std::cout << "Created new clock countdown" << std::endl;
@@ -443,7 +471,6 @@ void TypeRacer::render() {
     }
     else if (states == 1)
         inRace();
-
     window->display();
 
 }
@@ -500,6 +527,11 @@ bool TypeRacer::tryAgainInRange() {
         mousePos.y >= tryAgainRanges[2] && mousePos.y <= tryAgainRanges[3]);
 }
 
+bool TypeRacer::menuBtnInRange() {
+    return (mousePos.x >= menuBtnRanges[0] && mousePos.x <= menuBtnRanges[1] &&
+        mousePos.y >= menuBtnRanges[2] && mousePos.y <= menuBtnRanges[3]);
+}
+
 void TypeRacer::reset() {
     sfQuoteVec.clear();
     currWord.clear();
@@ -522,7 +554,7 @@ void TypeRacer::reset() {
     clock = nullptr;
     clockCountdown = nullptr;
     resultsTriggered = false;
-    countdownSeconds = 10;
+    countdownSeconds = 12;
     minutesPassed = 0;
     secondsPassed = 0;
     tempSecondsPassed = 0;

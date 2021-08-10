@@ -61,6 +61,12 @@ private:
 	std::array<int, 4> startBtnRanges;
 	bool onHover = false;
 
+	// Main menu button properties
+	sf::Texture menuBtnTexture;
+	sf::Sprite menuBtnSprite;
+	std::array<int, 4> menuBtnRanges;
+	bool onHoverMenuBtn = false;
+
 	// Results panel
 	sf::Texture resultPanelTexture;
 	sf::Sprite resultPanelSprite;
@@ -86,5 +92,6 @@ private:
 	// Button Events
 	bool startBtnInRange();
 	bool tryAgainInRange();
+	bool menuBtnInRange();
 };
 
