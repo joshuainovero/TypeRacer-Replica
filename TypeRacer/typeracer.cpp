@@ -64,10 +64,10 @@ TypeRacer::TypeRacer() {
     startBtnHoverTexture.loadFromFile("Resources/img/StartButtonHover.png");
     startBtnSprite.setTexture(startBtnTexture);
     startBtnSprite.setOrigin(sf::Vector2f(startBtnTexture.getSize().x/2.0f, startBtnTexture.getSize().y/2.0f));
-    startBtnSprite.setPosition(sf::Vector2f(window->getSize().x/2.0f, window->getSize().y/2.0f));
+    startBtnSprite.setPosition(sf::Vector2f(window->getSize().x/2.0f, (window->getSize().y/2.0f) + 115.0f));
     startBtnRanges[0] = 406;
     startBtnRanges[1] = startBtnRanges[0] + 289;
-    startBtnRanges[2] = 252;
+    startBtnRanges[2] = 366;
     startBtnRanges[3] = startBtnRanges[2] + 78;
 
     resultPanelTexture.loadFromFile("Resources/img/Results.png");
@@ -110,6 +110,33 @@ TypeRacer::TypeRacer() {
     menuBtnRanges[2] = menuBtnSprite.getPosition().y;
     menuBtnRanges[3] = menuBtnRanges[2] + menuBtnTexture.getSize().y;
 
+    statsTexture.loadFromFile("Resources/img/Stats.png");
+    statsSprite.setTexture(statsTexture);
+    statsSprite.setOrigin(sf::Vector2f(statsTexture.getSize().x / 2.0f, 0.0f));
+    statsSprite.setPosition(sf::Vector2f(window->getSize().x / 2.0f, 80.0f));
+    skillLevelTxt.setFont(font); avgSpeedTxt.setFont(font); bestTxt.setFont(font);
+    skillLevelTxt.setCharacterSize(25); avgSpeedTxt.setCharacterSize(25); bestTxt.setCharacterSize(25);
+    avgSpeedTxt.setFillColor(sf::Color(0, 88, 148));
+    bestTxt.setFillColor(sf::Color(0, 88, 148));
+    skillLevelTxt.setFillColor(sf::Color(0, 88, 148));
+    skillLevelTxt.setString(getDataJson()["skillLevel"].asString());
+    avgSpeedTxt.setString(std::to_string(getDataJson()["avgSpeed"].asInt()) + " WPM");
+    bestTxt.setString(std::to_string(getDataJson()["best"].asInt()) + " WPM");
+    setStatsPositions();
+
+
+}
+
+void TypeRacer::setStatsPositions() {
+    skillLevelTxt.setPosition(sf::Vector2f((int)(window->getSize().x / 2.0f), 139.0f));
+    skillLevelTxt.setOrigin((int)(skillLevelTxt.getLocalBounds().left + skillLevelTxt.getLocalBounds().width / 2.0f),
+        (int)(skillLevelTxt.getLocalBounds().top + skillLevelTxt.getLocalBounds().height / 2.0f));
+    avgSpeedTxt.setPosition(sf::Vector2f((int)(window->getSize().x / 2.0f), 219.0f));
+    avgSpeedTxt.setOrigin((int)(avgSpeedTxt.getLocalBounds().left + avgSpeedTxt.getLocalBounds().width / 2.0f),
+        (int)(avgSpeedTxt.getLocalBounds().top + avgSpeedTxt.getLocalBounds().height / 2.0f));
+    bestTxt.setPosition(sf::Vector2f((int)(window->getSize().x / 2.0f), 298.0f));
+    bestTxt.setOrigin((int)(bestTxt.getLocalBounds().left + bestTxt.getLocalBounds().width / 2.0f),
+        (int)(bestTxt.getLocalBounds().top + bestTxt.getLocalBounds().height / 2.0f));
 }
 
 std::size_t callback(const char* in, std::size_t size, std::size_t num, std::string* out) {
@@ -140,20 +167,23 @@ void TypeRacer::fetchQuoteAPI() {
 
     if (httpCode == 200)
     {
-        std::cout << "\nGot successful response from " << url << std::endl;
+        DEBUG_LOG("Got successful response from " << url << "\n");
         Json::Value jsonData;
         Json::Reader jsonReader;
 
         if (jsonReader.parse(*httpData.get(), jsonData))
         {
-            std::cout << "Successfully parsed JSON data" << std::endl;
-            std::cout << "\nJSON data received:" << std::endl;
-            /*std::cout << jsonData.toStyledString() << std::endl;*/
+            DEBUG_LOG("Successfully parsed JSON data");
+            DEBUG_LOG("JSON data received\n");
+            #ifdef LOG_QUOTE
+                DEBUG_LOG(jsonData.toStyledString() << "\n");
+            #endif
             
             uint32_t randIndexQuote = rand() % 707;
             int bb = 0;
             std::string parsedQuote = jsonData["quotes"][randIndexQuote]["quote"].asString();
             std::string parsedAbout = jsonData["quotes"][randIndexQuote]["about"].asString();
+            DEBUG_LOG("Quote ID : " << jsonData["quotes"][randIndexQuote]["id"].asInt() << "\n");
             parsedAbout = parsedAbout.substr(std::string("- from").length() + 1);
 
             uint32_t materialIndex;
@@ -165,6 +195,10 @@ void TypeRacer::fetchQuoteAPI() {
                 materialIndex = parsedAbout.find("a poem");
             else if (parsedAbout.find("a song") != std::string::npos)
                 materialIndex = parsedAbout.find("a song");
+            else if (parsedAbout.find("a comedy") != std::string::npos)
+                materialIndex = parsedAbout.find("a comedy");
+            else if (parsedAbout.find("a game") != std::string::npos)
+                materialIndex = parsedAbout.find("a game");
 
             about[0] = parsedAbout.substr(0, materialIndex - 2);
             about[1] = parsedAbout.substr(materialIndex); 
@@ -207,14 +241,14 @@ void TypeRacer::fetchQuoteAPI() {
         }
         else
         {
-            std::cout << "Could not parse HTTP data as JSON" << std::endl;
-            std::cout << "HTTP data was:\n" << *httpData.get() << std::endl;
+            DEBUG_LOG("Could not parse HTTP data as JSON" << "\n");
+            DEBUG_LOG("HTTP data was:\n" << *httpData.get());
             
         }
     }
     else
     {
-        std::cout << "Couldn't GET from " << url << " - exiting" << std::endl;
+        DEBUG_LOG("Couldn't GET from " << url << " - exiting" << "\n");
     
     }
 }
@@ -255,7 +289,7 @@ void TypeRacer::inRace() {
 
     if (countdownSeconds >= 0) {
         if (clockCountdown == nullptr) {
-            std::cout << "Created new clock countdown" << std::endl;
+            DEBUG_LOG("Created new clock countdown" << "\n");
             clockCountdown = new sf::Clock();
         }
         if ((int)clockCountdown->getElapsedTime().asSeconds() != tempSeconds) {
@@ -278,9 +312,9 @@ void TypeRacer::inRace() {
         if (clock == nullptr) {
             delete clockCountdown;
             clockCountdown = nullptr;
-            std::cout << "deleted clockCountdown" << std::endl;
+            DEBUG_LOG("deleted clockCountdown" << "\n");
             clock = new sf::Clock();
-            std::cout << "Created new clock" << std::endl;
+            DEBUG_LOG("Created new clock" << "\n");
         }
         if (!resultsTriggered) {
             if ((int)clock->getElapsedTime().asSeconds() != tempSecondsPassed) {
@@ -323,7 +357,24 @@ void TypeRacer::inRace() {
                 fetchedData["avgSpeed"] = round((float)fetchedData["totalSpeed"].asInt()/(float)fetchedData["races"].asInt());
                 if (wpm > fetchedData["best"].asUInt())
                     fetchedData["best"] = wpm;
+                if (fetchedData["avgSpeed"].asInt() <= 24)
+                    fetchedData["skillLevel"] = "Noob";
+                else if (fetchedData["avgSpeed"].asInt() <= 30 && fetchedData["avgSpeed"].asInt() >= 25)
+                    fetchedData["skillLevel"] = "Intermediate";
+                else if (fetchedData["avgSpeed"].asInt() <= 41 && fetchedData["avgSpeed"].asInt() >= 31)
+                    fetchedData["skillLevel"] = "Average";
+                else if (fetchedData["avgSpeed"].asInt() <= 54 && fetchedData["avgSpeed"].asInt() >= 42)
+                    fetchedData["skillLevel"] = "Pro";
+                else if (fetchedData["avgSpeed"].asInt() <= 79 && fetchedData["avgSpeed"].asInt() >= 55)
+                    fetchedData["skillLevel"] = "Typemaster";
+                else if (fetchedData["avgSpeed"].asInt() >= 80)
+                    fetchedData["skillLevel"] = "Megaracer";
+
                 dumpJsonData(fetchedData);
+                skillLevelTxt.setString(getDataJson()["skillLevel"].asString());
+                avgSpeedTxt.setString(std::to_string(getDataJson()["avgSpeed"].asInt()) + " WPM");
+                bestTxt.setString(std::to_string(getDataJson()["best"].asInt()) + " WPM");
+                setStatsPositions();
                 resultsTriggered = true;
             }
             window->draw(resultPanelSprite);
@@ -366,7 +417,7 @@ void TypeRacer::inRace() {
             if (clockCountdown != nullptr) {
                 delete clockCountdown;
                 clockCountdown = nullptr;
-                std::cout << "deleted clockCountdown" << std::endl;
+                DEBUG_LOG("deleted clockCountdown" << "\n");
             }
             reset();
             cursor.loadFromSystem(sf::Cursor::Arrow);
@@ -384,6 +435,10 @@ void TypeRacer::inRace() {
 }
 
 void TypeRacer::menu() {
+    window->draw(statsSprite);
+    window->draw(skillLevelTxt);
+    window->draw(avgSpeedTxt);
+    window->draw(bestTxt);
     window->draw(startBtnSprite);
     if (startBtnInRange()) {
         if (startBtnSprite.getTexture() != &startBtnHoverTexture)
@@ -542,9 +597,10 @@ void TypeRacer::run() {
         update();
         render();
 
-        //std::cout << mousePos.x << " : " << mousePos.y << std::endl;
-        // 406
-        // 252
+    #ifdef MOUSE_LOG
+        DEBUG_LOG(mousePos.x << " : " << mousePos.y << "\n");
+    #endif
+
     }
 }
 
@@ -589,6 +645,6 @@ void TypeRacer::reset() {
     if (clock != nullptr) {
         delete clock;
         clock = nullptr;
-        std::cout << "Deleted clock" << std::endl;
+        DEBUG_LOG("Deleted clock" << "\n");
     }
 }

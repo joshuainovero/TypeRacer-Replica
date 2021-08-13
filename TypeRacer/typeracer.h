@@ -16,6 +16,13 @@
 #include <ctime>
 #include <array>
 #include <cmath>
+#include <Lmcons.h>
+
+#ifdef _DEBUG
+#define DEBUG_LOG(x) std::cout << x << std::endl;
+#else
+#define DEBUG_LOG(x)
+#endif
 
 class TypeRacer {
 public:
@@ -76,6 +83,11 @@ private:
 	std::array<int, 4> tryAgainRanges;
 	bool resultsTriggered = false;
 
+	/*Stats*/
+	sf::Texture statsTexture;
+	sf::Sprite statsSprite;
+	sf::Text skillLevelTxt, avgSpeedTxt, bestTxt;
+
 	uint32_t states = 0; //0 - menu, 1 - inRace
 	int countdownSeconds = 10, tempSeconds;
 
@@ -92,6 +104,7 @@ private:
 	void subStrChecker();
 	void stateManager();
 	void reset();
+	void setStatsPositions();
 	void dumpJsonData(Json::Value& newData);
 	Json::Value getDataJson();
 

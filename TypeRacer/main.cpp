@@ -2,9 +2,7 @@
 
 int main() {
     srand(time(NULL));
-    #ifdef _DEBUG
-    std::cout << "debug mode" << std::endl;
-    #endif
+    DEBUG_LOG("Debug mode\n")
     TypeRacer typeracer;
     typeracer.run();
     return 0;
