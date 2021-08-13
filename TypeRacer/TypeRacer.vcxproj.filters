@@ -39,5 +39,11 @@
   <ItemGroup>
     <None Include="..\README.md" />
     <None Include="..\.gitignore" />
+    <None Include="data.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xsd Include="data.xsd">
+      <Filter>Header Files</Filter>
+    </Xsd>
   </ItemGroup>
 </Project>

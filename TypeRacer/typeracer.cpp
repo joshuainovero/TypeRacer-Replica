@@ -219,6 +219,22 @@ void TypeRacer::fetchQuoteAPI() {
     }
 }
 
+Json::Value TypeRacer::getDataJson() {
+    std::ifstream fileDataJson("data.json");
+        Json::Value data;
+        Json::Reader reader;
+        reader.parse(fileDataJson, data);
+    fileDataJson.close();
+    return data;
+}
+
+void TypeRacer::dumpJsonData(Json::Value& newData) {
+    std::ofstream fileDataJson("data.json");
+        Json::StyledWriter styledwriter;
+        fileDataJson << styledwriter.write(newData);
+    fileDataJson.close();
+}
+
 void TypeRacer::wpmDisplay() {
         wpm = (float)wordTyped / ((float)clock->getElapsedTime().asSeconds() / (float)60);
         wpmTxt.setString("WPM: " + std::to_string((int)wpm));
@@ -318,6 +334,14 @@ void TypeRacer::inRace() {
                     timeTxt.setString(std::to_string(minutesPassed) + ":" + std::to_string(secondsPassed));
                 std::string formattedAccuracy = std::to_string(accuracyPercentage).substr(0, std::to_string(accuracyPercentage).find('.') + 2);
                 accuracyTxt.setString(formattedAccuracy + "%");
+
+                Json::Value fetchedData = getDataJson();
+                fetchedData["races"] = fetchedData["races"].asInt() + 1;
+                fetchedData["totalSpeed"] = fetchedData["totalSpeed"].asInt() + wpm;
+                fetchedData["avgSpeed"] = round((float)fetchedData["totalSpeed"].asInt()/(float)fetchedData["races"].asInt());
+                if (wpm > fetchedData["best"].asUInt())
+                    fetchedData["best"] = wpm;
+                dumpJsonData(fetchedData);
                 resultsTriggered = true;
             }
             window->draw(resultPanelSprite);

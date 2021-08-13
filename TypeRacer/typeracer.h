@@ -15,6 +15,7 @@
 #include <string>
 #include <ctime>
 #include <array>
+#include <cmath>
 
 class TypeRacer {
 public:
@@ -28,7 +29,9 @@ private:
 	sf::Cursor cursor;
 	sf::Event sfEvent;
 	sf::Font font, fontBold;
-	sf::Text inputTxt, preInputTxt, wpmTxt, countdownTxtMsg, countdownTxtSec;
+	sf::Text inputTxt, preInputTxt;
+	sf::Text wpmTxt;
+	sf::Text countdownTxtMsg, countdownTxtSec;
 	sf::RectangleShape inputBar;
 	sf::RectangleShape inputBorder;
 	sf::RectangleShape borderQuote;
@@ -44,7 +47,7 @@ private:
 	std::array<std::string, 2> about;
 	uint32_t minutesPassed = 0, secondsPassed = 0, tempSecondsPassed = 0;
 
-	// Quote Marker
+	/*Quote Marker*/
 	sf::Text marker;
 	uint32_t cIndexQuote = 0;
 	uint32_t uiIndexQuote = 0;
@@ -55,19 +58,19 @@ private:
 	std::string lineChecker = "";
 	std::string currWrongWord;
 
-	// Start button properties
+	/*Start button properties*/
 	sf::Texture startBtnTexture, startBtnHoverTexture;
 	sf::Sprite startBtnSprite;
 	std::array<int, 4> startBtnRanges;
 	bool onHover = false;
 
-	// Main menu button properties
+	/*Main menu button properties*/
 	sf::Texture menuBtnTexture;
 	sf::Sprite menuBtnSprite;
 	std::array<int, 4> menuBtnRanges;
 	bool onHoverMenuBtn = false;
 
-	// Results panel
+	/*Results panel*/
 	sf::Texture resultPanelTexture;
 	sf::Sprite resultPanelSprite;
 	std::array<int, 4> tryAgainRanges;
@@ -76,6 +79,7 @@ private:
 	uint32_t states = 0; //0 - menu, 1 - inRace
 	int countdownSeconds = 10, tempSeconds;
 
+private:
 	void updateSFMLEvents();
 	void update();
 	void render();
@@ -88,6 +92,8 @@ private:
 	void subStrChecker();
 	void stateManager();
 	void reset();
+	void dumpJsonData(Json::Value& newData);
+	Json::Value getDataJson();
 
 	// Button Events
 	bool startBtnInRange();
