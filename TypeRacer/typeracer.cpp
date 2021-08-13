@@ -253,31 +253,11 @@ void TypeRacer::inRace() {
     window->draw(menuBtnSprite);
     displayQuote();
 
-    if (menuBtnInRange()) {
-        if (!onHoverMenuBtn) {
-            cursor.loadFromSystem(sf::Cursor::Hand);
-            window->setMouseCursor(cursor);
-            onHoverMenuBtn = true;
-        }
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            reset();
-            states = 0;
-        }
-    }
-    else {
-        if (onHoverMenuBtn) {
-            cursor.loadFromSystem(sf::Cursor::Arrow);
-            window->setMouseCursor(cursor);
-            onHoverMenuBtn = false;
-        }
-    }
-
-    if (clockCountdown == nullptr) {
-        std::cout << "Created new clock countdown" << std::endl;
-        clockCountdown = new sf::Clock();
-    }
-
     if (countdownSeconds >= 0) {
+        if (clockCountdown == nullptr) {
+            std::cout << "Created new clock countdown" << std::endl;
+            clockCountdown = new sf::Clock();
+        }
         if ((int)clockCountdown->getElapsedTime().asSeconds() != tempSeconds) {
             tempSeconds = (int)clockCountdown->getElapsedTime().asSeconds();
             countdownSeconds--;
@@ -297,6 +277,8 @@ void TypeRacer::inRace() {
     else {
         if (clock == nullptr) {
             delete clockCountdown;
+            clockCountdown = nullptr;
+            std::cout << "deleted clockCountdown" << std::endl;
             clock = new sf::Clock();
             std::cout << "Created new clock" << std::endl;
         }
@@ -372,6 +354,31 @@ void TypeRacer::inRace() {
             }
             //reset();
             //states = 0;
+        }
+    }
+    if (menuBtnInRange()) {
+        if (!onHoverMenuBtn) {
+            cursor.loadFromSystem(sf::Cursor::Hand);
+            window->setMouseCursor(cursor);
+            onHoverMenuBtn = true;
+        }
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            if (clockCountdown != nullptr) {
+                delete clockCountdown;
+                clockCountdown = nullptr;
+                std::cout << "deleted clockCountdown" << std::endl;
+            }
+            reset();
+            cursor.loadFromSystem(sf::Cursor::Arrow);
+            window->setMouseCursor(cursor);
+            states = 0;
+        }
+    }
+    else {
+        if (onHoverMenuBtn) {
+            cursor.loadFromSystem(sf::Cursor::Arrow);
+            window->setMouseCursor(cursor);
+            onHoverMenuBtn = false;
         }
     }
 }
@@ -574,13 +581,14 @@ void TypeRacer::reset() {
     lineChecker = "";
     accuracyPercentage = 100.0f;
     penaltyIncr = 0.0f;
-    delete clock;
-    clock = nullptr;
-    clockCountdown = nullptr;
     resultsTriggered = false;
     countdownSeconds = 12;
     minutesPassed = 0;
     secondsPassed = 0;
     tempSecondsPassed = 0;
-    std::cout << "Deleted clock" << std::endl;
+    if (clock != nullptr) {
+        delete clock;
+        clock = nullptr;
+        std::cout << "Deleted clock" << std::endl;
+    }
 }
