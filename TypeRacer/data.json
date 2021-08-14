@@ -1,7 +1,14 @@
 {
-   "avgSpeed" : 78.0,
-   "best" : 93,
-   "races" : 7,
-   "skillLevel" : "Typemaster",
-   "totalSpeed" : 547
+   "gameStats" : {
+      "avgSpeed" : 0,
+      "best" : 0,
+      "races" : 0,
+      "skillLevel" : "Noob",
+      "totalSpeed" : 0
+   },
+   "properties" : {
+      "github" : "https://github.com/joshuainovero/TypeRacer-Replica/tree/master/TypeRacer",
+      "localAPI" : false,
+      "quoteAPI" : "https://joshuainovero.github.io/public-json-api/typeracer.json"
+   }
 }

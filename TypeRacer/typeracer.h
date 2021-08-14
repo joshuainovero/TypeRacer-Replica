@@ -36,11 +36,8 @@ private:
 	sf::Cursor cursor;
 	sf::Event sfEvent;
 	sf::Font font, fontBold;
-	sf::Text inputTxt, preInputTxt;
 	sf::Text wpmTxt;
 	sf::Text countdownTxtMsg, countdownTxtSec;
-	sf::RectangleShape inputBar;
-	sf::RectangleShape inputBorder;
 	sf::RectangleShape borderQuote;
 	std::vector<sf::Text> sfQuoteVec;
 	std::string currWord;
@@ -53,6 +50,12 @@ private:
 	sf::Text title, author;
 	std::array<std::string, 2> about;
 	uint32_t minutesPassed = 0, secondsPassed = 0, tempSecondsPassed = 0;
+
+	/*Input div*/
+	sf::Text inputTxt, preInputTxt;
+	sf::RectangleShape inputBar;
+	sf::RectangleShape inputBorder;
+	sf::RectangleShape textCursor;
 
 	/*Quote Marker*/
 	sf::Text marker;
@@ -70,6 +73,14 @@ private:
 	sf::Sprite startBtnSprite;
 	std::array<int, 4> startBtnRanges;
 	bool onHover = false;
+
+	/*Download API button*/
+	sf::Text downloadAPITxt;
+	sf::Vector2i dlAPITxtPos;
+	std::array<int, 4> downloadAPIRanges;
+	bool onHoverDownloadAPI = false;
+	bool keyDown;
+
 
 	/*Main menu button properties*/
 	sf::Texture menuBtnTexture;
@@ -90,12 +101,20 @@ private:
 
 	uint32_t states = 0; //0 - menu, 1 - inRace
 	int countdownSeconds = 10, tempSeconds;
+	long httpCode;
+	std::unique_ptr<std::string> httpData;
+
+	Json::Value JSON_QUOTE_API;;
+	Json::Reader JSON_READER;
 
 private:
 	void updateSFMLEvents();
 	void update();
 	void render();
 	void fetchQuoteAPI();
+	void fetchLocalQuoteAPI();
+	void parseQuote();
+	void downloadAPI();
 	void displayQuote();
 	void dispQuoteMarker();
 	void menu();
@@ -112,5 +131,6 @@ private:
 	bool startBtnInRange();
 	bool tryAgainInRange();
 	bool menuBtnInRange();
+	bool downloadBtnInRange();
 };
 
