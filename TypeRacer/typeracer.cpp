@@ -199,16 +199,11 @@ void TypeRacer::downloadAPI() {
 }
 
 void TypeRacer::parseQuote() {
-
-    //if (JSON_READER.parse(*httpData.get(), JSON_QUOTE_API)){
-    DEBUG_LOG("Successfully parsed JSON data");
-    DEBUG_LOG("JSON data received\n");
     #ifdef LOG_QUOTE
                 DEBUG_LOG(jsonData.toStyledString() << "\n");
     #endif
 
     uint32_t randIndexQuote = rand() % 707;
-    int bb = 0;
     std::string parsedQuote = JSON_QUOTE_API["quotes"][randIndexQuote]["quote"].asString();
     std::string parsedAbout = JSON_QUOTE_API["quotes"][randIndexQuote]["about"].asString();
     DEBUG_LOG("Quote ID : " << JSON_QUOTE_API["quotes"][randIndexQuote]["id"].asInt() << "\n");
@@ -267,13 +262,6 @@ void TypeRacer::parseQuote() {
         tempText.setString(tempLine);
         sfQuoteVec.push_back(tempText);
     }
-
-    
-    //else {
-    //    DEBUG_LOG("Could not parse HTTP data as JSON" << "\n");
-    //    DEBUG_LOG("HTTP data was:\n" << *httpData.get());
-    //}
-
  
 }
 
