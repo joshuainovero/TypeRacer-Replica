@@ -1,24 +1,11 @@
 #include "typeracer.h"
-long long getFileSize()
-{
-    std::streampos fsize = 0;
+#ifdef _DEBUG
+#define ENGINE int main()
+#else
+#define ENGINE int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance,LPSTR lpszArgument, int nCmdShow)
+#endif
 
-    std::ifstream myfile("myfuckingdata.json", std::ios::in);  // File is of type const char*
-
-    fsize = myfile.tellg();         // The file pointer is currently at the beginning
-    myfile.seekg(0, std::ios::end);      // Place the file pointer at the end of file
-
-    fsize = myfile.tellg() - fsize;
-    myfile.close();
-
-    static_assert(sizeof(fsize) >= sizeof(long long), "Oops.");
-
-    std::cout << "size is: " << fsize << " bytes.\n";
-    return fsize;
-}
-
-int main() {
-    //std::cout << getFileSize() << std::endl;
+ENGINE{
     srand(time(NULL));
     DEBUG_LOG("Debug mode\n")
     TypeRacer typeracer;
