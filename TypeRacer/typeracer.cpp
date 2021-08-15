@@ -1,7 +1,10 @@
 #include "typeracer.h"
 
 TypeRacer::TypeRacer() {
-    window = new sf::RenderWindow(sf::VideoMode(1100, 600), "Type Racer", sf::Style::Close);
+    sf::Vector2f windowSize;
+    windowSize.x = (1100.0f / 1920.0f) * sf::VideoMode::getDesktopMode().width;
+    windowSize.y = (600.0f / 1080.0f) * sf::VideoMode::getDesktopMode().height;
+    window = new sf::RenderWindow(sf::VideoMode(windowSize.x, windowSize.y), "Type Racer", sf::Style::Close);
     
     font.loadFromFile("Fonts/Lato-Regular.ttf");
     fontBold.loadFromFile("Fonts/Lato-Bold.ttf");
@@ -9,116 +12,138 @@ TypeRacer::TypeRacer() {
     inputTxt.setFont(font);
     inputTxt.setFillColor(sf::Color(153, 153, 153));
     inputTxt.setCharacterSize(24);
-    inputTxt.setPosition(sf::Vector2f(120.0f, window->getSize().y - 115));
+    inputTxt.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
+    inputTxt.setPosition(sf::Vector2f((120.0f * sf::VideoMode::getDesktopMode().width / 1920.0f), window->getSize().y - (115 * sf::VideoMode::getDesktopMode().width / 1920.0f)));
 
     preInputTxt.setFont(font);
     preInputTxt.setFillColor(sf::Color(153, 153, 153));
     preInputTxt.setCharacterSize(24);
-    preInputTxt.setPosition(sf::Vector2f(120.0f, window->getSize().y - 115));
+    preInputTxt.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
+    preInputTxt.setPosition(sf::Vector2f((120.0f * sf::VideoMode::getDesktopMode().width / 1920.0f), window->getSize().y - (115 * sf::VideoMode::getDesktopMode().width / 1920.0f)));
     preInputTxt.setString("Type the above text here when the race begins");
     
     wpmTxt.setFont(fontBold);
     wpmTxt.setFillColor(sf::Color(99, 142, 142));
     wpmTxt.setCharacterSize(20);
-    wpmTxt.setPosition(sf::Vector2f(window->getSize().x-128, 16.0f));
+    wpmTxt.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
+    wpmTxt.setPosition(sf::Vector2f(window->getSize().x-(128 * sf::VideoMode::getDesktopMode().width / 1920.0f), (16.0f * sf::VideoMode::getDesktopMode().width / 1920.0f)));
     wpmTxt.setString("WPM:");
 
     countdownTxtMsg.setFont(font);
     countdownTxtMsg.setFillColor(sf::Color::Black);
     countdownTxtMsg.setCharacterSize(24);
-    countdownTxtMsg.setPosition(sf::Vector2f(420.0f, 10.0f));
+    countdownTxtMsg.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
+    countdownTxtMsg.setPosition(sf::Vector2f((420.0f * sf::VideoMode::getDesktopMode().width / 1920.0f), (10.0f * sf::VideoMode::getDesktopMode().width / 1920.0f)));
     countdownTxtMsg.setString("Get ready to type!     :     ");
 
     countdownTxtSec.setFont(fontBold);
     countdownTxtSec.setFillColor(sf::Color::Black);
     countdownTxtSec.setCharacterSize(35);
+    countdownTxtSec.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
     float cdTxtMsgWidth = countdownTxtMsg.findCharacterPos(countdownTxtMsg.getString().getSize() - 1).x - countdownTxtMsg.findCharacterPos(0).x;
-    countdownTxtSec.setPosition(sf::Vector2f(countdownTxtMsg.findCharacterPos(0).x + cdTxtMsgWidth, 3.0f));
+    countdownTxtSec.setPosition(sf::Vector2f(countdownTxtMsg.findCharacterPos(0).x + cdTxtMsgWidth, (3.0f * sf::VideoMode::getDesktopMode().width / 1920.0f)));
 
     inputBar.setSize(sf::Vector2f(900.0f, 40.0f));
     inputBar.setFillColor(sf::Color::White);
     inputBar.setOutlineColor(sf::Color(199, 213, 221));
     inputBar.setOutlineThickness(1);
-    inputBar.setPosition(sf::Vector2f(100.0f, window->getSize().y - 120));
+    inputBar.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
+    inputBar.setPosition(sf::Vector2f((100.0f * sf::VideoMode::getDesktopMode().width / 1920.0f), window->getSize().y - (120 * sf::VideoMode::getDesktopMode().width / 1920.0f)));
 
     inputBorder.setSize(sf::Vector2f(930.0f, 80.0f));
     inputBorder.setFillColor(sf::Color(246, 251, 255));
     inputBorder.setOutlineColor(sf::Color(199, 213, 217));
     inputBorder.setOutlineThickness(1.3f);
+    inputBorder.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
     inputBorder.setOrigin(sf::Vector2f(inputBorder.getSize().x/(float)2, inputBorder.getSize().y/(float)2));
-    inputBorder.setPosition(sf::Vector2f(window->getSize().x/(float)2, 500.0f));
+    inputBorder.setPosition(sf::Vector2f(window->getSize().x/(float)2, (500.0f * sf::VideoMode::getDesktopMode().width / 1920.0f)));
 
     textCursor.setSize(sf::Vector2f(1.3f, 26.0f));
     textCursor.setFillColor(sf::Color(153, 153, 153));
+    textCursor.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
 
     borderQuote.setSize(sf::Vector2f(950,350));
+    borderQuote.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
     borderQuote.setFillColor(sf::Color(246, 251, 255));
     borderQuote.setOutlineColor(sf::Color(199, 213, 217));
     borderQuote.setOutlineThickness(1.3f);
     borderQuote.setOrigin(sf::Vector2f(borderQuote.getSize().x/(float)2, borderQuote.getSize().y/(float)2));
-    borderQuote.setPosition(sf::Vector2f(window->getSize().x/(float)2, 240.0f));
+    borderQuote.setPosition(sf::Vector2f(window->getSize().x/(float)2, (240.0f * sf::VideoMode::getDesktopMode().width / 1920.0f)));
 
     marker.setFont(font);
     marker.setFillColor(sf::Color(153,204,0));
     marker.setStyle(sf::Text::Underlined);
     marker.setCharacterSize(24);
+    marker.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
 
     startBtnTexture.loadFromFile("Resources/img/StartButton.png");
     startBtnHoverTexture.loadFromFile("Resources/img/StartButtonHover.png");
     startBtnSprite.setTexture(startBtnTexture);
+    startBtnSprite.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
     startBtnSprite.setOrigin(sf::Vector2f(startBtnTexture.getSize().x/2.0f, startBtnTexture.getSize().y/2.0f));
-    startBtnSprite.setPosition(sf::Vector2f(window->getSize().x/2.0f, (window->getSize().y/2.0f) + 115.0f));
-    startBtnRanges[0] = 406;
-    startBtnRanges[1] = startBtnRanges[0] + 289;
-    startBtnRanges[2] = 366;
-    startBtnRanges[3] = startBtnRanges[2] + 78;
+    startBtnSprite.setPosition(sf::Vector2f(window->getSize().x/2.0f, (window->getSize().y/2.0f) + (115.0f * sf::VideoMode::getDesktopMode().width/1920.0f)));
+    startBtnRanges[0] = 406 * (sf::VideoMode::getDesktopMode().width/1920.0f);
+    startBtnRanges[1] = startBtnRanges[0] + 289 * (sf::VideoMode::getDesktopMode().width / 1920.0f);
+    startBtnRanges[2] = 366 * (sf::VideoMode::getDesktopMode().width / 1920.0f);
+    startBtnRanges[3] = startBtnRanges[2] + 78 * (sf::VideoMode::getDesktopMode().width / 1920.0f);
 
     resultPanelTexture.loadFromFile("Resources/img/Results.png");
     resultPanelSprite.setTexture(resultPanelTexture);
+    resultPanelSprite.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
     resultPanelSprite.setOrigin(sf::Vector2f(resultPanelTexture.getSize().x/2.0f, resultPanelTexture.getSize().y/2.0f));
     resultPanelSprite.setPosition(sf::Vector2f(window->getSize().x/2.0f, window->getSize().y/2.0f));
-    tryAgainRanges[0] = 627;
-    tryAgainRanges[1] = tryAgainRanges[0] + 186;
-    tryAgainRanges[2] = 318;
-    tryAgainRanges[3] = tryAgainRanges[2] + 44;
+    tryAgainRanges[0] = 627 * sf::VideoMode::getDesktopMode().width / 1920.0f;
+    tryAgainRanges[1] = tryAgainRanges[0] + (186 * sf::VideoMode::getDesktopMode().width / 1920.0f);
+    tryAgainRanges[2] = 318 * sf::VideoMode::getDesktopMode().width / 1920.0f;
+    tryAgainRanges[3] = tryAgainRanges[2] + (44 * sf::VideoMode::getDesktopMode().width / 1920.0f);
 
     yourSpeedTxt.setFont(fontBold);
     yourSpeedTxt.setCharacterSize(21);
+    yourSpeedTxt.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
     yourSpeedTxt.setFillColor(sf::Color::White);
-    yourSpeedTxt.setPosition(sf::Vector2f(485.0f, 280.0f));
+    yourSpeedTxt.setPosition(sf::Vector2f((485.0f * sf::VideoMode::getDesktopMode().width / 1920.0f), (280.0f * sf::VideoMode::getDesktopMode().width / 1920.0f)));
 
     timeTxt.setFont(fontBold);
     timeTxt.setCharacterSize(21);
+    timeTxt.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
     timeTxt.setFillColor(sf::Color::White);
-    timeTxt.setPosition(sf::Vector2f(485.0f, 342.0f));
+    timeTxt.setPosition(sf::Vector2f((485.0f * sf::VideoMode::getDesktopMode().width / 1920.0f), (342.0f * sf::VideoMode::getDesktopMode().width / 1920.0f)));
 
     accuracyTxt.setFont(fontBold);
     accuracyTxt.setCharacterSize(21);
+    accuracyTxt.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
     accuracyTxt.setFillColor(sf::Color::White);
-    accuracyTxt.setPosition(sf::Vector2f(485.0f, 406.0f));
+    accuracyTxt.setPosition(sf::Vector2f((485.0f * sf::VideoMode::getDesktopMode().width / 1920.0f), (406.0f * sf::VideoMode::getDesktopMode().width / 1920.0f)));
 
     title.setFont(font);
     title.setCharacterSize(21);
+    title.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
     title.setFillColor(sf::Color::White);
 
     author.setFont(font);
     author.setCharacterSize(18);
+    author.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
     author.setFillColor(sf::Color(148, 184, 210));
 
     menuBtnTexture.loadFromFile("Resources/img/MainMenuBtn.png");
     menuBtnSprite.setTexture(menuBtnTexture);
-    menuBtnSprite.setPosition(sf::Vector2f(10.0f, 5.0f));
+    menuBtnSprite.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
+    menuBtnSprite.setPosition(sf::Vector2f((10.0f * sf::VideoMode::getDesktopMode().width / 1920.0f), (5.0f * sf::VideoMode::getDesktopMode().width / 1920.0f)));
     menuBtnRanges[0] = menuBtnSprite.getPosition().x;
-    menuBtnRanges[1] = menuBtnRanges[0] + menuBtnTexture.getSize().x;
+    menuBtnRanges[1] = menuBtnRanges[0] + (menuBtnTexture.getSize().x * sf::VideoMode::getDesktopMode().width / 1920.0f);
     menuBtnRanges[2] = menuBtnSprite.getPosition().y;
-    menuBtnRanges[3] = menuBtnRanges[2] + menuBtnTexture.getSize().y;
+    menuBtnRanges[3] = menuBtnRanges[2] + (menuBtnTexture.getSize().y * sf::VideoMode::getDesktopMode().width / 1920.0f);
 
     statsTexture.loadFromFile("Resources/img/Stats.png");
     statsSprite.setTexture(statsTexture);
+    statsSprite.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
     statsSprite.setOrigin(sf::Vector2f(statsTexture.getSize().x / 2.0f, 0.0f));
-    statsSprite.setPosition(sf::Vector2f(window->getSize().x / 2.0f, 80.0f));
+    statsSprite.setPosition(sf::Vector2f(window->getSize().x / 2.0f, (80.0f * sf::VideoMode::getDesktopMode().width / 1920.0f)));
     skillLevelTxt.setFont(font); avgSpeedTxt.setFont(font); bestTxt.setFont(font);
     skillLevelTxt.setCharacterSize(25); avgSpeedTxt.setCharacterSize(25); bestTxt.setCharacterSize(25);
+    skillLevelTxt.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
+    avgSpeedTxt.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
+    bestTxt.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
     avgSpeedTxt.setFillColor(sf::Color(0, 88, 148));
     bestTxt.setFillColor(sf::Color(0, 88, 148));
     skillLevelTxt.setFillColor(sf::Color(0, 88, 148));
@@ -130,8 +155,9 @@ TypeRacer::TypeRacer() {
     downloadAPITxt.setFont(font);
     downloadAPITxt.setFillColor(sf::Color(153, 153, 153));
     downloadAPITxt.setCharacterSize(24);
+    downloadAPITxt.setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
     downloadAPITxt.setString("Download API Quote");
-    downloadAPITxt.setPosition(sf::Vector2f((int)(window->getSize().x / 2.0f), 490.0f));
+    downloadAPITxt.setPosition(sf::Vector2f((int)(window->getSize().x / 2.0f), (490.0f * sf::VideoMode::getDesktopMode().width / 1920.0f)));
     downloadAPITxt.setOrigin((int)(downloadAPITxt.getLocalBounds().left + downloadAPITxt.getLocalBounds().width / 2.0f),
         (int)(downloadAPITxt.getLocalBounds().top + downloadAPITxt.getLocalBounds().height / 2.0f));
     dlAPITxtPos.x = downloadAPITxt.getPosition().x - downloadAPITxt.getLocalBounds().width / 2;
@@ -143,13 +169,13 @@ TypeRacer::TypeRacer() {
 }
 
 void TypeRacer::setStatsPositions() {
-    skillLevelTxt.setPosition(sf::Vector2f((int)(window->getSize().x / 2.0f), 139.0f));
+    skillLevelTxt.setPosition(sf::Vector2f((int)(window->getSize().x / 2.0f), (139.0f * sf::VideoMode::getDesktopMode().width / 1920.0f)));
     skillLevelTxt.setOrigin((int)(skillLevelTxt.getLocalBounds().left + skillLevelTxt.getLocalBounds().width / 2.0f),
         (int)(skillLevelTxt.getLocalBounds().top + skillLevelTxt.getLocalBounds().height / 2.0f));
-    avgSpeedTxt.setPosition(sf::Vector2f((int)(window->getSize().x / 2.0f), 219.0f));
+    avgSpeedTxt.setPosition(sf::Vector2f((int)(window->getSize().x / 2.0f), (219.0f * sf::VideoMode::getDesktopMode().width / 1920.0f)));
     avgSpeedTxt.setOrigin((int)(avgSpeedTxt.getLocalBounds().left + avgSpeedTxt.getLocalBounds().width / 2.0f),
         (int)(avgSpeedTxt.getLocalBounds().top + avgSpeedTxt.getLocalBounds().height / 2.0f));
-    bestTxt.setPosition(sf::Vector2f((int)(window->getSize().x / 2.0f), 298.0f));
+    bestTxt.setPosition(sf::Vector2f((int)(window->getSize().x / 2.0f), (298.0f * sf::VideoMode::getDesktopMode().width / 1920.0f)));
     bestTxt.setOrigin((int)(bestTxt.getLocalBounds().left + bestTxt.getLocalBounds().width / 2.0f),
         (int)(bestTxt.getLocalBounds().top + bestTxt.getLocalBounds().height / 2.0f));
 }
@@ -315,7 +341,9 @@ void TypeRacer::inRace() {
         window->draw(inputTxt);
         window->draw(wpmTxt);
         window->draw(menuBtnSprite);
-        textCursor.setPosition(sf::Vector2f(inputTxt.getPosition().x + inputTxt.getLocalBounds().width + 1.5f, inputTxt.getPosition().y + 2.0f));
+        float scaler = sf::VideoMode::getDesktopMode().width / 1920.0f;
+        textCursor.setPosition(sf::Vector2f(inputTxt.getPosition().x + (inputTxt.getLocalBounds().width * scaler) + (1.5f * scaler), 
+            inputTxt.getPosition().y + (2.0f * scaler)));
         displayQuote();
 
         if (countdownSeconds >= 0) {
@@ -328,7 +356,7 @@ void TypeRacer::inRace() {
                 countdownSeconds--;
                 if (countdownSeconds == 5) {
                     countdownTxtMsg.setString("It's the final countdown!     :     ");
-                    countdownTxtMsg.setPosition(sf::Vector2f(353.0f, 10.0f));
+                    countdownTxtMsg.setPosition(sf::Vector2f((353.0f * sf::VideoMode::getDesktopMode().width / 1920.0f), (10.0f * sf::VideoMode::getDesktopMode().width / 1920.0f)));
                 }
             }
             if (countdownSeconds < 10) {
@@ -369,12 +397,12 @@ void TypeRacer::inRace() {
             if (cIndexQuote == sfQuoteVec.size()) {
                 if (!resultsTriggered) {
                     title.setString(about[0]);
-                    title.setPosition(sf::Vector2f((int)(window->getSize().x / 2.0f), (int)205.0f));
+                    title.setPosition(sf::Vector2f((int)(window->getSize().x / 2.0f), (int)(205.0f * sf::VideoMode::getDesktopMode().width / 1920.0f)));
                     title.setOrigin((int)(title.getLocalBounds().left + title.getLocalBounds().width / 2.0f),
                         (int)(title.getLocalBounds().top + title.getLocalBounds().height / 2.0f));
 
                     author.setString(about[1]);
-                    author.setPosition(sf::Vector2f((int)(window->getSize().x / 2.0f), (int)230.0f));
+                    author.setPosition(sf::Vector2f((int)(window->getSize().x / 2.0f), (int)(230.0f * sf::VideoMode::getDesktopMode().width / 1920.0f)));
                     author.setOrigin((int)(author.getLocalBounds().left + author.getLocalBounds().width / 2.0f),
                         (int)(author.getLocalBounds().top + author.getLocalBounds().height / 2.0f));
 
@@ -545,8 +573,9 @@ void TypeRacer::menu() {
 }
 
 void TypeRacer::displayQuote() {
-    sf::Vector2f quotePos(110.0f, 85.0f);
+    sf::Vector2f quotePos((110.0f * sf::VideoMode::getDesktopMode().width / 1920.0f), (85.0f * sf::VideoMode::getDesktopMode().width / 1920.0f));
     for (size_t i = 0; i < sfQuoteVec.size(); ++i) {
+        sfQuoteVec[i].setScale(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 1920.0f, sf::VideoMode::getDesktopMode().width / 1920.0f));
         sfQuoteVec[i].setPosition(sf::Vector2f(quotePos.x, quotePos.y));
         window->draw(sfQuoteVec[i]);
         quotePos.y += 35;
@@ -636,7 +665,6 @@ void TypeRacer::render() {
     }
     else if (states == 1)
         inRace();
-    
     window->display();
 
 }
@@ -715,7 +743,9 @@ void TypeRacer::reset() {
     currWrongWord.clear();
     wpmTxt.setString("WPM:");
     countdownTxtMsg.setString("Get ready to type!     :     ");
-    countdownTxtMsg.setPosition(sf::Vector2f(420.0f, 10.0f));
+    inputTxt.setString("");
+    inputBar.setFillColor(sf::Color::White);
+    countdownTxtMsg.setPosition(sf::Vector2f((420.0f * sf::VideoMode::getDesktopMode().width / 1920.0f), (10.0f * sf::VideoMode::getDesktopMode().width / 1920.0f)));
     inputBar.setOutlineColor(sf::Color(199, 213, 221));
     inputBar.setOutlineThickness(1);
     wordTyped = 0;
